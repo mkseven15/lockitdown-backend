@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <title>Browser Check</title>
     <style>
         body {
             font-family: sans-serif;
@@ -23,12 +23,17 @@
 
     <script>
         (function() {
-            var userAgent = navigator.userAgent;
+            // Get User Agent and convert to lowercase for case-insensitive check
+            var rawUserAgent = navigator.userAgent;
+            var userAgent = rawUserAgent.toLowerCase();
             var container = document.getElementById("dynamic-content");
             var contentHTML = "";
 
-            // Check if user agent contains "LDBBROWSER"
-            if (userAgent.indexOf("LDBBROWSER") > -1) {
+            // Debug: Log the detected User Agent to console (F12 > Console)
+            console.log("Detected User Agent:", rawUserAgent);
+
+            // Check if user agent contains "ldbbrowser" (case insensitive)
+            if (userAgent.indexOf("ldbbrowser") > -1) {
                 // TRUE: Show success extension image
                 contentHTML = `
                 <p class="">
