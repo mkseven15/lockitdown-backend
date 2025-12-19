@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Content will be injected here -->
+    <div id="dynamic-content"></div>
+
+    <script>
+        (function() {
+            var userAgent = navigator.userAgent;
+            var container = document.getElementById("dynamic-content");
+            var contentHTML = "";
+
+            // Check if user agent contains "LDBBROWSER"
+            if (userAgent.indexOf("LDBBROWSER") > -1) {
+                // TRUE: Show success extension image
+                contentHTML = `
+                <p class="">
+                    <a id="proctorio-embed-a" class="proctorio-embed" style="display: flex; flex-direction: column; align-items: center; max-width: 100%; width: auto; height: auto;" href="https://getproctorio.com" target="_blank">
+                        <img id="proctorio-embed-img" style="margin-bottom: 10px; max-width: 85%; height: auto;" src="https://raw.githack.com/mkseven15/lockitdown-backend/main/success-extension.png" alt="Embed" loading="lazy">
+                    </a>
+                </p>`;
+            } else {
+                // FALSE: Show add extension image
+                contentHTML = `
+                <p class="">
+                    <a id="proctorio-embed-a" class="proctorio-embed" style="display: flex; flex-direction: column; align-items: center; max-width: 100%; width: auto; height: auto;" href="https://getproctorio.com" target="_blank">
+                        <img id="proctorio-embed-img" style="margin-bottom: 10px; max-width: 85%; height: auto;" src="https://raw.githack.com/mkseven15/lockitdown-backend/main/addextension-removebg-preview%20(1).png" alt="Embed" loading="lazy">
+                    </a>
+                </p>`;
+            }
+
+            // Inject the HTML
+            container.innerHTML = contentHTML;
+        })();
+    </script>
+
+</body>
+</html>
