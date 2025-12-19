@@ -18,41 +18,54 @@
 </head>
 <body>
 
-    <!-- Content will be injected here -->
-    <div id="dynamic-content"></div>
+    <div id="dynamic-content">
+        <!-- Initial empty state or loader if preferred -->
+    </div>
 
     <script>
         (function() {
-            // Get User Agent and convert to lowercase for case-insensitive check
-            var rawUserAgent = navigator.userAgent;
-            var userAgent = rawUserAgent.toLowerCase();
-            var container = document.getElementById("dynamic-content");
-            var contentHTML = "";
+            const container = document.getElementById("dynamic-content");
 
-            // Debug: Log the detected User Agent to console (F12 > Console)
-            console.log("Detected User Agent:", rawUserAgent);
+            async function performSilentCheck() {
+                let isLDB = false;
+                
+                // 1. Quick check of local JS property
+                if (navigator.userAgent.toLowerCase().indexOf("ldbbrowser") > -1) {
+                    isLDB = true;
+                } else {
+                    // 2. Network-level check for header modifications
+                    try {
+                        const response = await fetch('https://httpbin.org/user-agent');
+                        if (response.ok) {
+                            const data = await response.json();
+                            if ((data['user-agent'] || "").toLowerCase().indexOf("ldbbrowser") > -1) {
+                                isLDB = true;
+                            }
+                        }
+                    } catch (e) {
+                        // Silent fail on network error
+                    }
+                }
 
-            // Check if user agent contains "ldbbrowser" (case insensitive)
-            if (userAgent.indexOf("ldbbrowser") > -1) {
-                // TRUE: Show success extension image
-                contentHTML = `
-                <p class="">
-                    <a id="proctorio-embed-a" class="proctorio-embed" style="display: flex; flex-direction: column; align-items: center; max-width: 100%; width: auto; height: auto;" href="https://getproctorio.com" target="_blank">
-                        <img id="proctorio-embed-img" style="margin-bottom: 10px; max-width: 85%; height: auto;" src="https://raw.githack.com/mkseven15/lockitdown-backend/main/success-extension.png" alt="Embed" loading="lazy">
-                    </a>
-                </p>`;
-            } else {
-                // FALSE: Show add extension image
-                contentHTML = `
-                <p class="">
-                    <a id="proctorio-embed-a" class="proctorio-embed" style="display: flex; flex-direction: column; align-items: center; max-width: 100%; width: auto; height: auto;" href="https://getproctorio.com" target="_blank">
-                        <img id="proctorio-embed-img" style="margin-bottom: 10px; max-width: 85%; height: auto;" src="https://raw.githack.com/mkseven15/lockitdown-backend/main/addextension-removebg-preview%20(1).png" alt="Embed" loading="lazy">
-                    </a>
-                </p>`;
+                // Replace container content based on result
+                if (isLDB) {
+                    container.innerHTML = `
+                    <p class="">
+                        <a id="proctorio-embed-a" class="ldb-embed" style="display: flex; flex-direction: column; align-items: center; max-width: 100%; width: auto; height: auto;" href="https://mkseven15.github.io/ldb/index.html?ldb=eyJzdGFydHVybCI6Imh0dHBzOi8vcmF3LmdpdGhhY2suY29tL21rc2V2ZW4xNS9sb2NraXRkb3duLWJhY2tlbmQvbWFpbi9jaGVjay5odG1sIiwiZXhpdHVybCI6Imh0dHBzOi8vZ2V0cHJvY3RvcmlvLmNvbSIsImFsbG93ZWRkb21haW5zIjpbImdvb2dsZS5jb20iXX0=" target="_blank">
+                            <img id="proctorio-embed-img" style="margin-bottom: 10px; max-width: 85%; height: auto;" src="https://raw.githack.com/mkseven15/lockitdown-backend/main/success-extension.png" alt="Embed" loading="lazy">
+                        </a>
+                    </p>`;
+                } else {
+                    container.innerHTML = `
+                    <p class="">
+                        <a id="proctorio-embed-a" class="ldb-embed" style="display: flex; flex-direction: column; align-items: center; max-width: 100%; width: auto; height: auto;" href="https://getproctorio.com" target="_blank">
+                            <img id="proctorio-embed-img" style="margin-bottom: 10px; max-width: 85%; height: auto;" src="https://raw.githack.com/mkseven15/lockitdown-backend/main/addextension-removebg-preview%20(1).png" alt="Embed" loading="lazy">
+                        </a>
+                    </p>`;
+                }
             }
 
-            // Inject the HTML
-            container.innerHTML = contentHTML;
+            performSilentCheck();
         })();
     </script>
 
